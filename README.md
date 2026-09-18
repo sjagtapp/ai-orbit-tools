@@ -1,167 +1,521 @@
 # AI Orbit — AI Tools Explorer
 
+A full-stack AI tools discovery platform inspired by the visual language and user experience of AI Orbit.
+
+The application allows users to discover, search, filter, sort, save, and explore AI tools through a responsive and premium dark-themed interface.
+
 ## Overview
 
-A full-stack AI tools discovery module inspired by AI Orbit's visual language: a dark,
-minimal, premium interface for searching, filtering, sorting and reviewing AI tools.
-Built as a complete **React → Express → MongoDB** application — not a frontend mockup.
+AI Orbit — AI Tools Explorer is a complete full-stack module built to demonstrate a production-oriented AI tools directory experience.
+
+The application includes:
+
+* AI tools discovery
+* Search
+* Category filtering
+* Pricing filtering
+* Rating filtering
+* Sorting
+* Pagination
+* Grid/List views
+* Tool detail pages
+* Favorites
+* Reviews and ratings
+* Related tools
+* Responsive design
+* Loading, empty and error states
+
+The frontend communicates with a REST API powered by Express and MongoDB.
+
+---
 
 ## Features
 
-- `/tools` — searchable, filterable, sortable, paginated tool directory with Grid/List views
-- Debounced search (300ms) across name, company, description, categories and tags
-- Server-side filtering by category, pricing model and minimum rating
-- Server-side sorting: Most Popular, Highest Rated, Newest, A→Z, Z→A
-- Server-side pagination (12 per page)
-- Filter state encoded in the URL (`/tools?q=...&category=...&pricing=...&sort=...&page=...`)
-- Grid/List view preference persisted in `localStorage`
-- `/tools/:slug` — detail page with overview, features, pricing plans, tool info panel,
-  reviews with rating breakdown, a review form, and related tools (by shared category)
-- `/favorites` — saved tools stored in `localStorage`, no auth required
-- Loading skeletons, empty states, error states with retry, and a 404 page
-- Toast feedback (save/remove/review submitted) — no `alert()`
-- Responsive layout (1/2/3–4 column grid), mobile filter drawer, keyboard/aria support
+### AI Tools Directory
+
+* Browse AI tools through a responsive grid
+* Switch between Grid and List views
+* Search tools with debounced input
+* Filter by category
+* Filter by pricing model
+* Filter by minimum rating
+* Sort by popularity, rating, newest and name
+* Server-side pagination
+
+### Tool Details
+
+Each tool has a dedicated detail page containing:
+
+* Tool name
+* Company
+* Description
+* Overview
+* Features
+* Categories
+* Pricing plans
+* Rating
+* Review count
+* Website link
+* Related tools
+
+### Favorites
+
+Users can save tools for later.
+
+Favorites are persisted using browser `localStorage`, so no authentication is required for the current implementation.
+
+### Reviews
+
+Users can submit reviews with:
+
+* Display name
+* Rating
+* Review text
+
+Reviews are stored in MongoDB and the tool's rating and review count are updated based on the stored reviews.
+
+### Responsive Design
+
+The interface is optimized for:
+
+* Desktop
+* Tablet
+* Mobile
+
+The mobile experience includes a dedicated filter drawer and responsive tool cards.
+
+### UI States
+
+The application includes:
+
+* Loading skeletons
+* Empty search results
+* API error states
+* Retry actions
+* 404 tool-not-found page
+* Form validation
+* Toast feedback
+
+---
 
 ## Tech Stack
 
-**Frontend:** React 18, Vite, Tailwind CSS, React Router, Axios, Lucide React icons
-**Backend:** Node.js, Express, MongoDB, Mongoose
-**Dev:** ESLint, nodemon
+### Frontend
 
-## Architecture
-
-```
-React (Vite, Tailwind)
-       │  Axios
-       ▼
-Express REST API  (/api/tools, /api/categories, /api/tools/:id/reviews)
-       │  Mongoose
-       ▼
-MongoDB  (tools, reviews collections)
-```
-
-Filtering, sorting, searching and pagination are all done server-side via Mongoose
-queries — the frontend never filters an already-loaded array.
-
-## Project Structure
-
-```
-ai-orbit-tools/
-  client/            React app (Vite + Tailwind)
-    src/
-      components/    Reusable UI components
-      pages/         Tools, ToolDetails, Favorites, NotFound
-      services/      api.js — centralized Axios client
-      hooks/         useTools, useDebounce, useFavorites
-      context/       FavoritesContext, ToastContext
-      utils/         formatters + shared constants
-  server/            Express API
-    config/db.js
-    controllers/     toolController.js, reviewController.js
-    models/          Tool.js, Review.js
-    routes/          toolRoutes.js, reviewRoutes.js
-    middleware/errorHandler.js
-    seed/            tools.js (41 dummy tools), reviews.js, index.js
-```
-
-## Setup
+* React
+* Vite
+* Tailwind CSS
+* React Router
+* Axios
+* Lucide React
 
 ### Backend
 
-```bash
-cd server
-npm install
-cp .env.example .env   # set MONGO_URI to your MongoDB instance
-npm run seed            # populates ~41 tools and generated reviews
-npm run dev              # starts API on http://localhost:5000
-```
-
-### Frontend
-
-```bash
-cd client
-npm install
-cp .env.example .env    # VITE_API_URL defaults to http://localhost:5000/api
-npm run dev              # starts app on http://localhost:5173
-```
+* Node.js
+* Express.js
+* Mongoose
 
 ### Database
 
-Requires a running MongoDB instance (local `mongod`, Docker, or Atlas). Set
-`MONGO_URI` in `server/.env` accordingly, e.g.:
+* MongoDB Atlas
 
-```
-MONGO_URI=mongodb://127.0.0.1:27017/ai-orbit-tools
+### Development
+
+* Git
+* GitHub
+* ESLint
+* Nodemon
+
+---
+
+## Architecture
+
+```text
+┌─────────────────────┐
+│     React + Vite    │
+│    Tailwind CSS     │
+└──────────┬──────────┘
+           │
+           │ Axios / REST API
+           ▼
+┌─────────────────────┐
+│   Express + Node.js │
+└──────────┬──────────┘
+           │
+           │ Mongoose
+           ▼
+┌─────────────────────┐
+│       MongoDB       │
+│       Atlas         │
+└─────────────────────┘
 ```
 
-## Environment Variables
+Search, filtering, sorting and pagination are handled server-side through the API.
 
-**server/.env**
+---
+
+## Project Structure
+
+```text
+ai-orbit-tools/
+│
+├── client/
+│   ├── src/
+│   │   ├── components/
+│   │   ├── pages/
+│   │   ├── services/
+│   │   ├── hooks/
+│   │   ├── context/
+│   │   └── utils/
+│   │
+│   └── package.json
+│
+├── server/
+│   ├── config/
+│   ├── controllers/
+│   ├── models/
+│   ├── routes/
+│   ├── middleware/
+│   ├── seed/
+│   └── package.json
+│
+├── .gitignore
+└── README.md
 ```
-MONGO_URI=mongodb://127.0.0.1:27017/ai-orbit-tools
+
+---
+
+# Getting Started
+
+## Prerequisites
+
+Make sure you have installed:
+
+* Node.js
+* npm
+* MongoDB Atlas account or a local MongoDB installation
+* Git
+
+---
+
+## 1. Clone the Repository
+
+```bash
+git clone https://github.com/YOUR_USERNAME/ai-orbit-tools.git
+cd ai-orbit-tools
+```
+
+---
+
+# Backend Setup
+
+Navigate to the server:
+
+```bash
+cd server
+```
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Create a `.env` file inside the `server` directory:
+
+```env
+MONGO_URI=your_mongodb_connection_string
 PORT=5000
 CLIENT_ORIGIN=http://localhost:5173
 ```
 
-**client/.env**
+Replace `your_mongodb_connection_string` with your MongoDB Atlas connection string.
+
+### Seed the database
+
+```bash
+npm run seed
 ```
+
+This populates the database with sample AI tools and reviews.
+
+### Start the backend
+
+```bash
+npm run dev
+```
+
+The API will run at:
+
+```text
+http://localhost:5000
+```
+
+Health check:
+
+```text
+http://localhost:5000/api/health
+```
+
+---
+
+# Frontend Setup
+
+Open another terminal.
+
+Navigate to:
+
+```bash
+cd client
+```
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Create:
+
+```text
+client/.env
+```
+
+Add:
+
+```env
 VITE_API_URL=http://localhost:5000/api
 ```
 
-## API Endpoints
+Start the frontend:
 
-| Method | Endpoint                          | Description                                  |
-|--------|------------------------------------|-----------------------------------------------|
-| GET    | `/api/tools`                       | List tools — `q, category, pricing, minRating, sort, page, limit` |
-| GET    | `/api/tools/:slug`                 | Single tool by slug                          |
-| GET    | `/api/categories`                  | Distinct category list                       |
-| GET    | `/api/tools/related/:slug`         | Up to 4 related tools by shared category     |
-| GET    | `/api/tools/:id/reviews`           | Reviews for a tool (id or slug)              |
-| POST   | `/api/tools/:id/reviews`           | Submit a review `{ userName, rating, comment }` |
-| GET    | `/api/health`                      | Health check                                 |
+```bash
+npm run dev
+```
 
-Responses use `{ success, ... }` JSON with standard status codes (200/201/400/404/500).
-Submitting a review recomputes the tool's `rating` and `reviewCount` from all reviews.
+The application will run at:
 
-## Database Models
+```text
+http://localhost:5173
+```
 
-**Tool** — name, slug, companyName, logo, description, longDescription, website,
-categories[], tags[], pricing `{ type, startingPrice, currency }`, features[],
-rating, reviewCount, popularity, pricingPlans[], platform[], timestamps.
+Open:
 
-**Review** — toolId (ref Tool), userName, rating (1–5), comment (min 10 chars), timestamps.
+```text
+http://localhost:5173/tools
+```
 
-## Verification performed
+---
 
-- `npm run build` (client) completes with no errors — production bundle generated.
-- `npm run lint` (client) passes with zero errors on the application source.
-- All server files pass `node --check` (syntax validation).
-- Starting the server without MongoDB fails cleanly with a clear connection error
-  and non-zero exit, rather than crashing silently — confirming the startup/error
-  path works as intended.
+# Environment Variables
 
-## Known Limitations
+## Server
 
-- **No live MongoDB instance was available in the environment this was built in**,
-  so the seed script and API were not exercised against a running database end-to-end.
-  The query logic (search regex, category/pricing/rating filters, sort whitelisting,
-  pagination math, review aggregation) was written and reviewed carefully against the
-  Mongoose/MongoDB API, but you should run `npm run seed` and hit the endpoints
-  yourself (or via the frontend) as a final check once you have MongoDB running locally
-  or via Atlas.
-- Tool logos are omitted in the dummy dataset (a monogram fallback is used); swap in
-  real image URLs via the `logo` field if desired.
-- No authentication — favorites use `localStorage`, reviews use a free-text display name,
-  per the assignment scope.
+```env
+MONGO_URI=
+PORT=5000
+CLIENT_ORIGIN=http://localhost:5173
+```
 
-## Future Improvements
+## Client
 
-- Real authentication and per-user favorites/reviews stored server-side
-- Image upload for tool logos and screenshots
-- Full-text search ranking (MongoDB `$text` score) instead of regex-based `$or`
-- Admin flow for `/submit-tool`
-- Caching layer (e.g. Redis) for category counts and popular queries
+```env
+VITE_API_URL=http://localhost:5000/api
+```
 
-## Screenshots
+Never commit `.env` files or database credentials to the repository.
 
-_Add screenshots here after running the app locally._
+---
+
+# API Endpoints
+
+| Method | Endpoint                   | Description                                              |
+| ------ | -------------------------- | -------------------------------------------------------- |
+| GET    | `/api/health`              | API health check                                         |
+| GET    | `/api/tools`               | Get tools with search, filtering, sorting and pagination |
+| GET    | `/api/tools/:slug`         | Get a tool by slug                                       |
+| GET    | `/api/categories`          | Get available categories                                 |
+| GET    | `/api/tools/related/:slug` | Get related tools                                        |
+| GET    | `/api/tools/:id/reviews`   | Get reviews for a tool                                   |
+| POST   | `/api/tools/:id/reviews`   | Submit a review                                          |
+
+### Tool Query Parameters
+
+The tools endpoint supports:
+
+```text
+q
+category
+pricing
+minRating
+sort
+page
+limit
+```
+
+Example:
+
+```text
+/api/tools?q=coding&category=Coding&pricing=Free&minRating=4.5&sort=rating&page=1&limit=12
+```
+
+---
+
+# Database Models
+
+## Tool
+
+A tool contains:
+
+* Name
+* Slug
+* Company
+* Description
+* Long description
+* Website
+* Categories
+* Tags
+* Pricing
+* Features
+* Rating
+* Review count
+* Popularity
+* Pricing plans
+* Platform information
+
+## Review
+
+A review contains:
+
+* Tool reference
+* User name
+* Rating
+* Comment
+* Created date
+
+---
+
+# Available Routes
+
+### Tools
+
+```text
+/tools
+```
+
+AI tools directory.
+
+### Tool Details
+
+```text
+/tools/:slug
+```
+
+Individual tool information.
+
+### Favorites
+
+```text
+/favorites
+```
+
+Saved tools.
+
+### Not Found
+
+```text
+/*
+```
+
+Application 404 state.
+
+---
+
+# Development Scripts
+
+## Client
+
+```bash
+npm run dev
+```
+
+Start the Vite development server.
+
+```bash
+npm run build
+```
+
+Create a production build.
+
+```bash
+npm run lint
+```
+
+Run ESLint.
+
+## Server
+
+```bash
+npm run dev
+```
+
+Start the Express development server with Nodemon.
+
+```bash
+npm run seed
+```
+
+Populate MongoDB with sample tools and reviews.
+
+---
+
+# Design Direction
+
+The interface follows a dark, minimal and premium visual direction inspired by AI Orbit.
+
+Key design principles include:
+
+* Dark backgrounds
+* White primary typography
+* Muted secondary text
+* Subtle borders
+* Consistent spacing
+* Minimal card styling
+* Restrained animations
+* Responsive layouts
+* Clear visual hierarchy
+
+The goal is to maintain a cohesive product experience rather than introducing an unrelated design system.
+
+---
+
+# Current Scope
+
+This project focuses on the AI Tools module.
+
+Authentication is intentionally outside the current scope. Favorites are stored locally in the browser, while reviews are stored through the backend API and MongoDB.
+
+The project uses sample data for demonstration purposes.
+
+---
+
+# Future Improvements
+
+Potential improvements include:
+
+* User authentication
+* Server-side user favorites
+* User profiles
+* Tool submission workflow
+* Admin moderation
+* Tool logo and screenshot uploads
+* Advanced search ranking
+* Caching for frequently requested queries
+* More detailed tool comparison functionality
+* Analytics and usage insights
+
+---
+
+# License
+
+This project was created as a development and portfolio assignment.
